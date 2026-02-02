@@ -2,7 +2,7 @@
 
 
 <h2>
-Texture Vector-Quantization and Reconstruction Aware Prediction for Generative Super-Resolution
+Texture Vector-Quantization and Reconstruction Aware Prediction for Generative Super-Resolution (ICLR 2026)
 </h2>
 
 [Qifan Li](),  [Jiale Zou](https://github.com/Sean2CS),  [Jinhua Zhang](https://scholar.google.com/citations?user=tyYxiXoAAAAJ),  [Wei Long](https://scholar.google.com/citations?user=CsVTBJoAAAAJ), [Xingyu Zhou](https://scholar.google.com/citations?user=dgO3CyMAAAAJ&hl=zh-CN&oi=sra),  [Shuhang Gu](https://scholar.google.com/citations?user=-kSTt40AAAAJ)
