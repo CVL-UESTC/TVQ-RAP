@@ -5,7 +5,7 @@
 Texture Vector-Quantization and Reconstruction Aware Prediction for Generative Super-Resolution (ICLR 2026)
 </h2>
 
-[Qifan Li](),  [Jiale Zou](https://github.com/Sean2CS),  [Jinhua Zhang](https://scholar.google.com/citations?user=tyYxiXoAAAAJ),  [Wei Long](https://scholar.google.com/citations?user=CsVTBJoAAAAJ), [Xingyu Zhou](https://scholar.google.com/citations?user=dgO3CyMAAAAJ&hl=zh-CN&oi=sra),  [Shuhang Gu](https://scholar.google.com/citations?user=-kSTt40AAAAJ)
+[Qifan Li](),  [Jiale Zou](https://github.com/Sean2CS),  [Jinhua Zhang](https://nuanbaobao.github.io/),  [Wei Long](https://scholar.google.com/citations?user=CsVTBJoAAAAJ), [Xingyu Zhou](https://scholar.google.com/citations?user=dgO3CyMAAAAJ&hl=zh-CN&oi=sra),  [Shuhang Gu](https://scholar.google.com/citations?user=-kSTt40AAAAJ)
 
 [![arXiv](https://img.shields.io/badge/arXiv-2509.23774-b31b1b.svg)](https://arxiv.org/pdf/2509.23774)
 [![GitHub Stars](https://img.shields.io/github/stars/LabShuHangGU/TVQ-RAP?style=social)](https://github.com/LabShuHangGU/TVQ-RAP)
