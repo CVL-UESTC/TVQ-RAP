@@ -1,0 +1,168 @@
+# general settings
+name: TVQRAP_stage2
+model_type: TVQRAP_stage2_Model
+num_gpu: 2
+manual_seed: 0
+
+
+# the first degradation process
+resize_prob: [0.2, 0.7, 0.1]  # up, down, keep
+resize_range: [0.15, 1.5]
+gaussian_noise_prob: 0.5
+noise_range: [1, 30]
+poisson_scale_range: [0.05, 3]
+gray_noise_prob: 0.4
+jpeg_range: [30, 95]
+
+# the second degradation process
+second_order_prob: 0.5
+second_blur_prob: 0.8
+resize_prob2: [0.3, 0.4, 0.3]  # up, down, keep
+resize_range2: [0.3, 1.2]
+gaussian_noise_prob2: 0.5
+noise_range2: [1, 25]
+poisson_scale_range2: [0.05, 2.5]
+gray_noise_prob2: 0.4
+jpeg_range2: [30, 95]
+
+
+
+scale: 4
+queue_size: 224
+# dataset and data loader settings
+datasets:
+  train:
+    name: imagnet
+    type: Imagenet_stage2_Dataset
+    dataroot_gt: /data0/home/liqifan/CODE-SR/DATASET/imagenet256-test/gt
+    
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+
+    blur_kernel_size: 21
+    kernel_list: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+    kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    sinc_prob: 0.1
+    blur_sigma: [0.2, 3]
+    betag_range: [0.5, 4]
+    betap_range: [1, 2]
+
+    blur_kernel_size2: 15
+    kernel_list2: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+    kernel_prob2: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    sinc_prob2: 0.1
+    blur_sigma2: [0.2, 1.5]
+    betag_range2: [0.5, 4.0]
+    betap_range2: [1, 2.0]
+
+    final_sinc_prob: 0.8
+
+    gt_size: 256
+    finetune_gt_size: 512
+    use_hflip: True
+    use_rot: False
+
+
+  
+    # data loader
+    num_worker_per_gpu: 2
+    batch_size_per_gpu: 16
+    finetune_batch_size_per_gpu: 2
+    dataset_enlarge_ratio: 1
+    prefetch_mode: ~
+
+  val:
+    name: validation
+    type: Imagenet_test_Dataset
+    dataroot_gt: /data0/home/liqifan/CODE-SR/DATASET/imagenet256-test/gt
+    dataroot_lq: /data0/home/liqifan/CODE-SR/DATASET/imagenet256-test/lq
+    io_backend:
+      type: disk
+
+
+
+# network structures
+network_g:
+  type: CodeFormer
+  dim_embd: 256
+  codebook_size: 1024
+  fix_modules: ['quantize','generator']
+  vqgan_path: './trained_weights/tvqrap_tok_model.pth' # put the trained tokenizer weights (trained in stage1) here
+
+network_vqgan: # 
+  type: VQAutoEncoder
+  ch_mult: [1, 2, 2, 4, 2,1]
+  res_blocks: 2
+  codebook_size: 1024
+  model_path: './trained_weights/tvqrap_tok_model.pth' # put the trained tokenizer weights (trained in stage1) here
+
+# path
+path:
+  pretrain_network_g: ~
+  param_key_g: params_ema
+  strict_load_g: false
+  pretrain_network_d: ~
+  strict_load_d: true
+  resume_state: ~
+
+# base_lr(4.5e-6)*bach_size(4)
+train:
+  use_hq_feat_loss: true
+  feat_loss_weight: 1.0
+  cross_entropy_loss: true
+  entropy_loss_weight: 0.5
+  fidelity_weight: 0
+
+  optim_g:
+    type: Adam
+    lr: !!float 1e-4
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+
+  scheduler:
+    type: MultiStepLR
+    milestones: [60000000000]
+    gamma: 1
+
+
+  total_iter: 300000
+  finetune_total_iter: 4000
+
+  warmup_iter: -1  # no warm up
+  ema_decay: 0.995
+
+  use_adaptive_weight: true
+
+  net_g_start_iter: 0
+  net_d_iters: 1
+  net_d_start_iter: 0
+  manual_seed: 0
+
+  perceptual_opt:
+    type: LPIPSLoss
+    loss_weight: 1.0
+    use_input_norm: true
+    range_norm: true
+
+# validation settings
+val:
+  val_freq: 50000 # no validation
+  save_img: true
+
+# logging settings
+logger:
+  print_freq: 100
+  save_checkpoint_freq: 50000
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~
+
+# dist training settings
+dist_params:
+  backend: nccl
+  port: 29412
+
+find_unused_parameters: true

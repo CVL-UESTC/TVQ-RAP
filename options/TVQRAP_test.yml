@@ -1,0 +1,49 @@
+# general settings
+name: TVQRAP_test
+model_type: TVQRAP_test_Model
+num_gpu: 1
+manual_seed: 0
+
+
+scale: 4
+# dataset and data loader settings
+datasets:
+  val:
+    name: validation
+
+    type: Real_test_Dataset
+    dataroot_lq: .../.../.../lq_dir 
+
+    io_backend:
+      type: disk
+ 
+
+# network structures
+network_g:
+  type: CodeFormer
+  dim_embd: 256
+  codebook_size: 1024
+
+# path
+path:
+  pretrain_network_g:  './trained_weights/tvqrap_sr_stage3_model.pth' # put the trained SR model weights (trained in stage3) here
+  param_key_g: params_ema
+  strict_load_g: false
+  resume_state: ~
+
+
+# logging settings
+logger:
+  print_freq: 100
+  save_checkpoint_freq: 20000
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~
+
+# dist training settings
+dist_params:
+  backend: nccl
+  port: 29413
+
+find_unused_parameters: true
